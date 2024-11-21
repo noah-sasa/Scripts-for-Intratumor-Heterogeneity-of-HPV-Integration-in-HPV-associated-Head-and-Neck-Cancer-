@@ -20,36 +20,10 @@ seurat$HPV_group <- ifelse(hpv_expression$HPV > 0, "positive", "negative")
 
 df <- seurat@meta.data
 table(df[df$SampleGroup=="Tumor" & df$HPV_group=="positive",]$predicted.celltype.l1)
-##                    aDC           B activated              B memory
-##                      4                    12                   117
-##                B naive             CD4 naive           CD4 Non-TFH
-##                     39                     1                     3
-##                CD4 TCM               CD4 TFH              CD4 TREG
-##                    123                     6                    44
-##              CD8 naive                 CD8 T               CD8 TCM
-##                     17                    46                    69
-##         Cycling DZ GCB           Cycling FDC             Cycling T
-##                    138                    40                    67
-##                     DC                   dnT DZtoLZ GCB transition
-##                     14                     3                     1
-##             Epithelial     FCRL4/5+ B memory                   FDC
-##                   6099                    17                   166
-##           Granulocytes                   ILC LZtoDZ GCB transition
-##                    115                     2                     1
-##        MAIT/TRDV2+ gdT                  Mast            Mono/Macro
-##                      1                     6                    90
-##                     NK         NK_CD56bright        non-TRDV2+ gdT
-##                     19                     4                     1
-##                     PB                    PC                   PDC
-##                      1                    70                     3
-##                 preGCB
-##                     55
+
 
 table(seurat.sub$Sample)
-##      OP13     OP14     OP17     OP20     OP33 OP33norm     OP34 OP34norm
-##        46      304      299     2330     3184       92     1614       99
-##   OP35BOT   OP35LN OP35norm      OP4      OP5      OP6      OP9
-##       241       88       24     1490      316      332     1149
+
 
 ### HPV-positiveでEpithelial以外は除外
 
@@ -105,13 +79,6 @@ write.table(annot_df, "annot_samplecase.txt", sep="\t", quote=FALSE, col.names=F
 ### inferCNA
 library(infercnv)
 
-#ref_names=c("BCLLATLAS_05_izi9unx1_8qdzhivu", "BCLLATLAS_06_d8kwy76j_7blj9otf", "BCLLATLAS_06_giz3qso4_783dbpu6", "BCLLATLAS_07_i5udk3x0_57gv6ncx",
-#    "BCLLATLAS_07_umt51kfr_p8ei65ms", "BCLLATLAS_131_rfs8oamh_0obpdn7k", "BCLLATLAS_131_xxfne43y_x9dh95oz", "BCLLATLAS_16_bw94nf57_vm85woki",
-#    "BCLLATLAS_16_ggq3nifm_jkilwp1x", "BCLLATLAS_19_dvcbn9p8_ix0j3k8b", "BCLLATLAS_19_ff8s19u3_7e96iusr", "BCLLATLAS_21_dvdzq8et_eot75su8",
-#    "BCLLATLAS_21_md651vbh_eymr91s7", "BCLLATLAS_21_n1b3su0a_l7shyi35", "BCLLATLAS_21_x739d5z1_dsamhgey", "BCLLATLAS_25_bz5rpwtv_kg7w108r",
-#    "BCLLATLAS_25_wf4su8ny_h4yj8bv7", "BCLLATLAS_34_kjzv2rwx_sfomyxok", "BCLLATLAS_34_v8g80gtx_ps9bamz7", "BCLLATLAS_41_ejto2bae_y5mydeam",
-#    "BCLLATLAS_41_z3of7uaq_mzbhy4tt", "BCLLATLAS_54_altbaco5_45sf3wul", "BCLLATLAS_54_c3ftguo2_xxwxs507", "BCLLATLAS_57_nqyw13tk_o7guqugw",
-#    "BCLLATLAS_57_p4b145yq_4z8crwqq")
 
 ref_names <- c("OP33norm", "OP34norm", "OP35norm")
 
@@ -365,75 +332,6 @@ hpv_posrate <- df %>%
   )
 
 
-##               HPV_group
-##  subclusters   negative positive     positive_rate
-##    OP13_s1           27        0     0
-##    OP13_s2           12        7     0.368
-##    OP14_s1          145        1     0.00685
-##    OP14_s2           61        1     0.0161
-##    OP14_s3           49        3     0.0577
-##    OP14_s4           18       26     0.591
-##    OP17_s1          156        1     0.00637
-##    OP17_s2           48       78     0.619
-##    OP17_s3            4       12     0.75
-##    OP20_s1           62      664     0.915
-##    OP20_s2           75      484     0.866
-##    OP20_s3           47      315     0.870
-##    OP20_s4          232       45     0.162
-##    OP20_s5           87       99     0.532
-##    OP20_s6           39       76     0.661
-##    OP20_s7           45       60     0.571
-##    OP33_s1          111     1172     0.913
-##    OP33_s2           41      576     0.934
-##    OP33_s3          263      270     0.507
-##    OP33_s4          426       50     0.105
-##    OP33_s5           73      159     0.685
-##    OP33_s6            4       39     0.907
-##    OP33norm_s1       36        0     0
-##    OP33norm_s2       33        0     0
-##    OP33norm_s3       17        0     0
-##    OP33norm_s4        6        0     0
-##    OP34_s1          373      272     0.422
-##    OP34_s2          348      135     0.280
-##    OP34_s3          339        4     0.0117
-##    OP34_s4           85       58     0.406
-##    OP34norm_s1       40        0     0
-##    OP34norm_s2       35        0     0
-##    OP34norm_s3       13       11     0.458
-##    OP35BOT_s1        43       58     0.574
-##    OP35BOT_s2        51        8     0.136
-##    OP35BOT_s3        21       30     0.588
-##    OP35BOT_s4        28        2     0.0667
-##    OP35LN_s1         11       15     0.577
-##    OP35LN_s2          6       19     0.76
-##    OP35LN_s3         11       13     0.542
-##    OP35LN_s4          6        7     0.538
-##    OP35norm          24        0     0
-##    OP4_s1           240      162     0.403
-##    OP4_s2           292        9     0.0299
-##    OP4_s3            27      155     0.852
-##    OP4_s4            28      107     0.793
-##    OP4_s5            49       80     0.620
-##    OP4_s6            75       37     0.330
-##    OP4_s7            19       70     0.787
-##    OP4_s8            13       66     0.835
-##    OP4_s9            49       12     0.197
-##    OP5_s1            22       80     0.784
-##    OP5_s2            17       67     0.798
-##    OP5_s3            28       25     0.472
-##    OP5_s4            16       26     0.619
-##    OP5_s5            26        9     0.257
-##    OP6_s1            20       84     0.808
-##    OP6_s2            10       91     0.901
-##    OP6_s3            37       41     0.526
-##    OP6_s4            43        6     0.122
-##    OP9_s1           335      107     0.242
-##    OP9_s2           216        1     0.00461
-##    OP9_s3           200        2     0.00990
-##    OP9_s4            79      102     0.564
-##    OP9_s5           106        1     0.00935
-
-
 df <- dplyr::left_join(df, hpv_posrate, by="subclusters")
 
 
@@ -610,14 +508,6 @@ write.table(annot_df, "annot_samplecase.CD45n.txt", sep="\t", quote=FALSE, col.n
 
 ### inferCNA
 library(infercnv)
-
-#ref_names=c("BCLLATLAS_05_izi9unx1_8qdzhivu", "BCLLATLAS_06_d8kwy76j_7blj9otf", "BCLLATLAS_06_giz3qso4_783dbpu6", "BCLLATLAS_07_i5udk3x0_57gv6ncx",
-#    "BCLLATLAS_07_umt51kfr_p8ei65ms", "BCLLATLAS_131_rfs8oamh_0obpdn7k", "BCLLATLAS_131_xxfne43y_x9dh95oz", "BCLLATLAS_16_bw94nf57_vm85woki",
-#    "BCLLATLAS_16_ggq3nifm_jkilwp1x", "BCLLATLAS_19_dvcbn9p8_ix0j3k8b", "BCLLATLAS_19_ff8s19u3_7e96iusr", "BCLLATLAS_21_dvdzq8et_eot75su8",
-#    "BCLLATLAS_21_md651vbh_eymr91s7", "BCLLATLAS_21_n1b3su0a_l7shyi35", "BCLLATLAS_21_x739d5z1_dsamhgey", "BCLLATLAS_25_bz5rpwtv_kg7w108r",
-#    "BCLLATLAS_25_wf4su8ny_h4yj8bv7", "BCLLATLAS_34_kjzv2rwx_sfomyxok", "BCLLATLAS_34_v8g80gtx_ps9bamz7", "BCLLATLAS_41_ejto2bae_y5mydeam",
-#    "BCLLATLAS_41_z3of7uaq_mzbhy4tt", "BCLLATLAS_54_altbaco5_45sf3wul", "BCLLATLAS_54_c3ftguo2_xxwxs507", "BCLLATLAS_57_nqyw13tk_o7guqugw",
-#    "BCLLATLAS_57_p4b145yq_4z8crwqq")
 
 ref_names <- c("BCLLATLAS_05", "BCLLATLAS_06", "BCLLATLAS_07", "BCLLATLAS_131", "BCLLATLAS_16", "BCLLATLAS_19",
     "BCLLATLAS_21", "BCLLATLAS_25", "BCLLATLAS_34", "BCLLATLAS_41", "BCLLATLAS_54", "BCLLATLAS_57")
