@@ -1,7 +1,7 @@
 # Scripts for "Intratumor Heterogeneity of HPV Integration in HPV-associated Head and Neck Cancer"
 
 ## Overview
-This repository provides code used for 1) WGS preprocessing, 2) Variant merging, 3) Integration VAF calculation, and 3) scRNA-seq analysis.
+This repository provides code used for 1) WGS preprocessing, 2) Variant merging, 3) Integration VAF calculation, and 4) scRNA-seq analysis.
 
 Sasa N, et al., "Intratumor Heterogeneity of HPV Integration in HPV-associated Head and Neck Cancer", Nature Communications in press.
 
