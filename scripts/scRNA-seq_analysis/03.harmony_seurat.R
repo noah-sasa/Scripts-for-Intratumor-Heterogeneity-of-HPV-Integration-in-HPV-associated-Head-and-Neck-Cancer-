@@ -3,58 +3,8 @@ seurat.combined.Scdsed.filt <- readRDS("../seurat_qc02/seurat.combined.Scdsed.fi
 
 
 
-# harmony + seurat https://github.com/satijalab/seurat-wrappers/blob/master/docs/harmony.md
-# seurat https://kero.hgc.jp/open_tutorials/learning/contents/single2_article.html
-#       https://github.com/NBISweden/workshop-scRNAseq/blob/master/labs/compiled/seurat/seurat_02_dim_reduction.md
-#       https://satijalab.org/seurat/articles/pbmc3k_tutorial.html
-
 library(harmony)
 library(Seurat)
-
-# Harmony + seuratから
-#   pbmcsca <- NormalizeData(pbmcsca) %>% FindVariableFeatures() %>% ScaleData() %>% RunPCA(verbose = FALSE)
-#   pbmcsca <- RunHarmony(pbmcsca, group.by.vars = "Method")
-#   pbmcsca <- RunUMAP(pbmcsca, reduction = "harmony", dims = 1:30)
-#   pbmcsca <- FindNeighbors(pbmcsca, reduction = "harmony", dims = 1:30) %>% FindClusters()
-#   DimPlot(pbmcsca, group.by = c("Method", "ident", "CellType"), ncol = 3)
-
-### SCTを用いて正規化  https://hbctraining.github.io/scRNA-seq_online/lessons/06a_integration_harmony.html
-
-
-
-#   ### remove SG_SL_UO_00170
-#   seurat.combined.miQCed.Scdsed.filt <- subset(seurat.combined.miQCed.Scdsed.filt, subset = Sample != "SG_SL_UO_00170")
-
-
-
-### Harmonyは先にmerge推奨
-#     # Merge raw samples
-#     merged_seurat <- merge(x = raw_seurat_list[[1]],
-#                    y = raw_seurat_list[2:length(raw_seurat_list)],
-#                    merge.data = TRUE)
-#     
-#     # Perform log-normalization and feature selection, as well as SCT normalization on global object
-#     merged_seurat <- merged_seurat %>%
-#         NormalizeData() %>%
-#         FindVariableFeatures(selection.method = "vst", nfeatures = 2000) %>% 
-#         ScaleData() %>%
-#         SCTransform(vars.to.regress = c("mitoRatio"))
-#     
-#     # Calculate PCs using variable features determined by SCTransform (3000 by default)
-#     merged_seurat <- RunPCA(merged_seurat, assay = "SCT", npcs = 50)
-
-
-### SCTransformは個別に正規化推奨
-##      bm40k.list <- SplitObject(hcabm40k, split.by = "orig.ident")
-##      bm40k.list <- lapply(X = bm40k.list, FUN = function(x) {
-##          x <- SCTransform(x, verbose = FALSE, do.scale = FALSE, do.center = FALSE)
-##      })
-##      features <- SelectIntegrationFeatures(object.list = bm40k.list)
-##      bm40k.list <- lapply(X = bm40k.list, FUN = function(x) {
-##          x <- ScaleData(x, features = features, verbose = FALSE)
-##          x <- RunPCA(x, features = features, verbose = FALSE)
-##      })
-
 
 
 
@@ -378,43 +328,7 @@ rm(seurat.list)
 
 ### PCA
 seurat_merged <- RunPCA(object = seurat_merged, assay = "SCT", npcs = 50)
-##  PC_ 1
-##  Positive:  KRT19, KRT15, KRT5, CSTA, S100A2, FXYD3, KRT17, SFN, S100A8, TACSTD2
-##             HSPB1, S100A9, KRT6A, S100A14, PERP, CCL20, CALML3, CDKN2A, KRT13, KRT8
-##             SPINT2, ELF3, CD24, GSTP1, SLPI, CSTB, KRT18, CLDN7, PTTG1, MAL2
-##  Negative:  IGFBP7, VIM, B2M, TMSB4X, SPARC, HLA-B, CD74, CST3, HLA-DRB1, HLA-A
-##             TIMP1, HLA-DRA, COL1A1, GNG11, S100A4, CALD1, LGALS1, SERPING1, RAMP2, HLA-DPA1
-##             HLA-DPB1, HLA-C, IGFBP4, IFITM2, RNASE1, SRGN, COL4A2, CRIP2, RGCC, TIMP3
-##  PC_ 2
-##  Positive:  CXCR4, HLA-DRA, CD52, SRGN, CD74, RGS1, CORO1A, HLA-DPB1, HLA-DPA1, HLA-DRB1
-##             HLA-DQA1, LTB, TMSB4X, ALOX5AP, CD3D, HLA-DQB1, CREM, TRBC2, LAPTM5, TRAC
-##             CCL5, HCST, GPR183, NKG7, DUSP2, CD7, BTG1, TYROBP, CD2, RGS2
-##  Negative:  IGFBP7, SPARC, IFITM3, COL1A1, CALD1, IFI27, LGALS1, TIMP1, IGFBP4, SERPING1
-##             S100A6, GNG11, VIM, CTHRC1, CST3, RAMP2, ID3, CRIP2, ADIRF, PRKCDBP
-##             IGFBP3, IGFBP5, TIMP3, CAV1, CCDC80, TPM1, HSPB1, COL4A2, HTRA1, ID1
-##  PC_ 3
-##  Positive:  COL1A1, LGALS1, CALD1, S100A4, SPARC, CTHRC1, HMGB2, CPE, CCDC80, HIST1H4C
-##             TPM1, FBLN1, MT2A, TOP2A, UBE2C, PRRX1, TRAC, CENPF, PTTG1, RPLP1
-##             NUSAP1, RPS27, CCL5, MFGE8, CD3D, NBL1, CD7, CXCR4, TRBC2, SERPING1
-##  Negative:  CD74, HLA-DRA, HLA-DRB1, HLA-DPA1, S100A9, HLA-DPB1, S100A8, HLA-DQA1, HLA-DQB1, LYZ
-##             C15orf48, TYROBP, AIF1, RNASE1, SAT1, RAMP2, FCER1G, CST3, KRT6A, TACSTD2
-##             CSTA, CSTB, SLPI, TMSB4X, TMSB10, LST1, HLA-DMA, CD14, CD68, TM4SF1
-##  PC_ 4
-##  Positive:  RAMP2, GNG11, RNASE1, CRIP2, HYAL2, HSPG2, TM4SF1, IGFBP7, SLC9A3R2, PRCP
-##             GIMAP7, FKBP1A, TSPAN7, INSR, BCAM, FLT1, COL4A2, GIMAP4, HMGB2, EPAS1
-##             STMN1, TGFBR2, PDLIM1, PTMA, ADAM15, HIST1H4C, SPRY1, ITGA6, CAV1, IFI27
-##  Negative:  COL1A1, FTH1, LGALS1, S100A4, FTL, SERPING1, SERPINF1, S100A9, CST3, LGALS3BP
-##             S100A8, C15orf48, SOD2, TYROBP, CTHRC1, CALD1, TIMP1, FCER1G, LYZ, PLAUR
-##             APOE, CCDC80, AIF1, MT2A, CD68, CTSB, CD63, NBL1, CXCL14, FBLN1
-##  PC_ 5
-##  Positive:  HLA-DRA, CD74, HMGB2, HLA-DRB1, UBE2C, HLA-DPA1, TOP2A, HLA-DQA1, HLA-DPB1, PTTG1
-##             LYZ, TUBA1B, CENPF, CST3, AIF1, NUSAP1, TYROBP, HIST1H4C, HLA-DQB1, LGALS1
-##             FTL, BIRC5, CCNB1, FCER1G, HMGN2, STMN1, CDC20, KRT15, CDK1, AURKB
-##  Negative:  S100A8, S100A9, KRT6A, ANXA1, SLPI, KRT13, TACSTD2, CXCR4, CD3D, C19orf33
-##             CSTA, CCL5, TRBC2, CD7, LYPD3, CLDN7, CD2, TRAC, PDZK1IP1, CSTB
-##             RGCC, SPINK5, CXCL17, CD52, SDCBP2, NEAT1, ISG20, TSC22D3, MALL, NKG7
 
-#print(seurat_merged[["pca"]], dims = 1:5, nfeatures = 5)
 
 
 png("SCT.VizDimLoadings.png", width = 800, height = 500)
@@ -474,71 +388,7 @@ seurat_merged
 ##   1 other assay present: SCT
 ##   3 dimensional reductions calculated: pca, harmony, umap
 
-#   seurat_merged[["refAssay"]] <- NULL
-#   seurat_merged[["prediction.score.celltype.l2"]] <- NULL
-#   seurat_merged[["prediction.score.celltype.l1"]] <- NULL
-#   seurat_merged[["prediction.score.celltype.l3"]] <- NULL
-#   seurat_merged[["impADT"]] <- NULL
-#   
-#   seurat_merged
-#   ##  An object of class Seurat
-#   ##  49185 features across 66915 samples within 2 assays
-#   ##  Active assay: RNA (27204 features, 0 variable features)
-#   ##   1 other assay present: SCT
-#   ##   3 dimensional reductions calculated: pca, harmony, umap
 
-#   library(SeuratDisk)
-#   SaveH5Seurat(seurat_merged, filename = "Harmony_round1.h5Seurat")
-#   ##  Creating h5Seurat file for version 3.1.5.9900
-#   ##  Adding counts for RNA
-#   ##  Adding data for RNA
-#   ##  No variable features found for RNA
-#   ##  No feature-level metadata found for RNA
-#   ##  Adding counts for SCT
-#   ##  Adding data for SCT
-#   ##  Adding scale.data for SCT
-#   ##  Adding variable features for SCT
-#   ##  No feature-level metadata found for SCT
-#   ##  Writing out SCTModel.list for SCT
-#   ##  Adding cell embeddings for pca
-#   ##  Adding loadings for pca
-#   ##  No projected loadings for pca
-#   ##  Adding standard deviations for pca
-#   ##  No JackStraw data for pca
-#   ##  Adding cell embeddings for harmony
-#   ##  Adding loadings for harmony
-#   ##  Adding projected loadings for harmony
-#   ##  No standard deviations for harmony
-#   ##  No JackStraw data for harmony
-#   ##  Adding cell embeddings for umap
-#   ##  No loadings for umap
-#   ##  No projected loadings for umap
-#   ##  No standard deviations for umap
-#   ##  No JackStraw data for umap
-#   
-#   # hfile <- Connect("Harmony_round1.h5Seurat")
-#   # hfile$index()
-#   # ##    Data for assay RNA★ (default assay)
-#   # ##       counts      data    scale.data
-#   # ##         ✔          ✔          ✖
-#   # ##    Data for assay SCT
-#   # ##       counts      data    scale.data
-#   # ##         ✔          ✔          ✔
-#   # ##    Dimensional reductions:
-#   # ##               Embeddings  Loadings  Projected  JackStraw
-#   # ##     harmony:      ✔          ✔          ✔          ✖
-#   # ##     pca:          ✔          ✔          ✖          ✖
-#   # ##     umap:         ✔          ✖          ✖          ✖
-#   # ##    Graphs:
-#   # ##     ─ SCT_nn
-#   # ##     ─ SCT_snn
-#   
-#   Convert("Harmony_round1.h5Seurat", dest = "h5ad")
-#   ##  Validating h5Seurat file
-#   ##  Adding data from RNA as X
-#   ##  Adding counts from RNA as raw
-#   ##  Transfering meta.data to obs
-#   ##  Adding dimensional reduction information for umap (global)
 
 seurat_merged[["SCT"]] <- NULL
 
@@ -550,52 +400,6 @@ seurat_merged
 
 saveRDS(seurat_merged,"Harmony_RNA_round1.rds")
 
-#   library(SeuratDisk)
-#   SaveH5Seurat(seurat_merged, filename = "Harmony_RNA_round1.h5Seurat")
-#   ##  Creating h5Seurat file for version 3.1.5.9900
-#   ##  Adding counts for RNA
-#   ##  Adding data for RNA
-#   ##  No variable features found for RNA
-#   ##  No feature-level metadata found for RNA
-#   ##  Adding cell embeddings for umap
-#   ##  No loadings for umap
-#   ##  No projected loadings for umap
-#   ##  No standard deviations for umap
-#   ##  No JackStraw data for umap
-#   
-#   
-#   # hfile <- Connect("Harmony_round1.h5Seurat")
-#   # hfile$index()
-#   # hfile$index()
-#   # ##    Data for assay RNA★ (default assay)
-#   # ##       counts      data    scale.data
-#   # ##         ✔          ✔          ✖
-#   
-#   Convert("Harmony_RNA_round1.h5Seurat", dest = "h5ad")
-#   ##  Validating h5Seurat file
-#   ##  Warning: Cannot find assay SCT in the H5Seurat file
-#   ##  Adding data from RNA as X
-#   ##  Adding counts from RNA as raw
-#   ##  Transfering meta.data to obs
-
-### Azimuth
-## DL results
-
-#UMAP (Seurat Reduction RDS)
-#projected.umap <- readRDS('azimuth_umap.Rds')
-#object <- object[, Cells(projected.umap)]
-#object[['umap.proj']] <- projected.umap
-
-#Imputed protein (Seurat Assay RDS)
-#imputed.assay <- readRDS('azimuth_impADT.Rds')
-#object <- object[, Cells(imputed.assay)]
-#object[['impADT']] <- imputed.assay
-
-#Predicted cell types and scores (TSV)
-#predictions <- read.delim('azimuth_pred.tsv', row.names = 1)
-#object <- AddMetaData(
-#    object = object,
-#    metadata = predictions)
 
 #-------------------------------#
 #             graph             #
